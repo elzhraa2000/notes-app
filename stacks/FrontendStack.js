@@ -1,16 +1,17 @@
-import { ReactStaticSite, use } from "@serverless-stack/resources";
-import { ApiStack } from "./ApiStack";
-import { AuthStack } from "./AuthStack";
-import { StorageStack } from "./StorageStack";
+import {ReactStaticSite, use} from '@serverless-stack/resources';
+import {ApiStack} from './ApiStack';
+import {AuthStack} from './AuthStack';
+import {StorageStack} from './StorageStack';
 
-export function FrontendStack({ stack, app }) {
-  const { api } = use(ApiStack);
-  const { auth } = use(AuthStack);
-  const { bucket } = use(StorageStack);
+export const FrontendStack = ({stack, app}) => {
+  const {api} = use(ApiStack);
+  const {auth} = use(AuthStack);
+  const {bucket} = use(StorageStack);
 
   // Define our React app
-  const site = new ReactStaticSite(stack, "ReactSite", {
-    path: "frontend",
+  const site = new ReactStaticSite(stack, 'ReactSite', {
+
+    path: 'frontend',
     // Pass in our environment variables
     environment: {
       REACT_APP_API_URL: api.customDomainUrl || api.url,
@@ -24,6 +25,6 @@ export function FrontendStack({ stack, app }) {
 
   // Show the url in the output
   stack.addOutputs({
-    SiteUrl: site.url,
+    SiteUrl: site.customDomainUrl || site.url,
   });
-}
+};
