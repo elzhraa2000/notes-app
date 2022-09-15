@@ -1,13 +1,14 @@
-import { Api, use } from "@serverless-stack/resources";
-import { StorageStack } from "./StorageStack";
+import {Api, use} from '@serverless-stack/resources';
+import {StorageStack} from './StorageStack';
 
-export function ApiStack({ stack, app }) {
-  const { table } = use(StorageStack);
+export const ApiStack = ({stack, app}) => {
+  const {table} = use(StorageStack);
 
   // Create the API
-  const api = new Api(stack, "Api", {
+  const api = new Api(stack, 'Api', {
+   
     defaults: {
-      authorizer: "iam",
+      authorizer: 'iam',
       function: {
         permissions: [table],
         environment: {
@@ -17,22 +18,22 @@ export function ApiStack({ stack, app }) {
       },
     },
     routes: {
-      "GET /notes": "functions/list.main",
-      "POST /notes": "functions/create.main",
-      "GET /notes/{id}": "functions/get.main",
-      "PUT /notes/{id}": "functions/update.main",
-      "DELETE /notes/{id}": "functions/delete.main",
-      "POST /billing": "functions/billing.main",
+      'GET /notes': 'functions/list.main',
+      'POST /notes': 'functions/create.main',
+      'GET /notes/{id}': 'functions/get.main',
+      'PUT /notes/{id}': 'functions/update.main',
+      'DELETE /notes/{id}': 'functions/delete.main',
+      'POST /billing': 'functions/billing.main',
     },
   });
 
   // Show the API endpoint in the output
   stack.addOutputs({
-    ApiEndpoint: api.url,
+    ApiEndpoint: api.customDomainUrl || api.url,
   });
 
   // Return the API resource
   return {
     api,
   };
-}
+};
